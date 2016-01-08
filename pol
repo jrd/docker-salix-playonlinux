@@ -1,0 +1,35 @@
+#!/bin/sh
+[ -n "$DISPLAY" ] && [ -n "$XAUTHORITY" ] || exit 1
+docker_xauth=$(mktemp)
+cp $XAUTHORITY $docker_xauth 
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $docker_xauth nmerge -
+inter=
+exe="playonlinux"
+if [ "$1" = "--bash" ]; then
+  exe=/bin/bash
+  inter='-ti'
+  shift
+fi
+if [ "$1" = "--inter" ]; then
+  inter='-ti'
+  shift
+fi
+[ -n "$XDG_CONFIG" ] && config_dir="$XDG_CONFIG" || config_dir=$HOME/.config
+[ -r "$config_dir/pol.rc" ] && . "$config_dir/pol.rc"
+[ -n "$VOLUME_HOME_DIR" ] && home_binding="-v $VOLUME_HOME_DIR:/home/pol" || home_binding=
+docker run \
+  $inter \
+  --rm \
+  --privileged \
+  -e LANG \
+  -e DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -e XAUTHORITY=/tmp/.docker.xauth \
+  -v $docker_xauth:/tmp/.docker.xauth:ro \
+  --device /dev/dri/card0:/dev/dri/card0 \
+  -v /dev/snd:/dev/snd \
+  $home_binding \
+  --name pol \
+  jrdasm/salix-playonlinux \
+  $exe "$@"
+rm $docker_xauth

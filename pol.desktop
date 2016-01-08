@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=PlayOnLinux (Docker)
+Comment=Wine GUI under Docker
+Exec=.local/bin/pol
+Icon=pol
+Terminal=false
+Type=Application
+Categories=Game;
