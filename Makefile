@@ -1,4 +1,4 @@
-RELEASE=4.2.9
+RELEASE=4.2.10
 
 .PHONY:
 image: Dockerfile

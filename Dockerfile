@@ -135,7 +135,7 @@ COPY \
     libasyncns-0.8-i486-2_SBo.txz \
     pulseaudio-7.0-i486-2_SBo.txz \
     wxPython-2.8.12.1-i486-2_SBo.txz \
-    playonlinux-4.2.9-noarch-1_SBo.txz \
+    playonlinux-4.2.10-noarch-1_SBo.txz \
     /tmp/
 RUN for p in /tmp/*.txz; do spkg -i $p; done && \
     rm /tmp/*.txz
@@ -146,8 +146,7 @@ RUN mv /usr/bin/links /usr/bin/links.bin && \
     (cd /usr/lib && ln -sf libvga.so libvga.so.1) && \
     useradd -m -N -g games -G video,audio,cdrom pol && \
     passwd -d pol && \
-    echo '%games ALL=(root) NOPASSWD: ALL' > /etc/sudoers.d/10-games && \
-    sed -i 's/self\.sendAlert(_(/pass #\0/' /usr/share/playonlinux/python/mainwindow.py
+    echo '%games ALL=(root) NOPASSWD: ALL' > /etc/sudoers.d/10-games
 WORKDIR /home/pol
 USER pol
 ENV USER pol
